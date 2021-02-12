@@ -1,0 +1,6 @@
+include ':companymain'
+include ':detail'
+include ':main'
+include ':core'
+include ':app'
+rootProject.name = "InfoAboutCompany"
