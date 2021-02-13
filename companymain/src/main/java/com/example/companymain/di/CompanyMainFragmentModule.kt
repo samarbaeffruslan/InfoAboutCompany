@@ -7,6 +7,9 @@ import com.example.companymain.data.CompanyMainRepositoryImpl
 import com.example.companymain.presentation.CompanyMainFragmentViewModel
 import com.example.core.di.viewmodel.ViewModelKey
 import com.example.core.viewmodelfactory.ViewModelFactory
+import com.example.detail.data.DetailRepository
+import com.example.detail.data.DetailRepositoryImpl
+import com.example.detail.presentation.DetailFragmentViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -19,9 +22,17 @@ interface CompanyMainFragmentModule {
     fun bindViewModel(viewModel: CompanyMainFragmentViewModel): ViewModel
 
     @Binds
+    @IntoMap
+    @ViewModelKey(DetailFragmentViewModel::class)
+    fun bindDetailViewModel(viewModel: DetailFragmentViewModel): ViewModel
+
+    @Binds
     fun viewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
 
     @Binds
     fun providePopularRepository(repository: CompanyMainRepositoryImpl): CompanyMainRepository
+
+    @Binds
+    fun provideDetailRepository(repository: DetailRepositoryImpl): DetailRepository
 
 }

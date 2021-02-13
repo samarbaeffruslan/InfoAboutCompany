@@ -10,22 +10,29 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.companymain.R
 import com.example.companymain.adapter.CompanyMainAdapter
 import com.example.companymain.databinding.FragmentMainCompanyBinding
 import com.example.companymain.di.CompanyMainComponent
+import com.example.core.navigation.CompanyMainNavigator
 import com.example.core.utils.Resource
+import com.example.detail.presentation.DetailFragmentViewModel
 import javax.inject.Inject
 
-class CompanyMainFragment : Fragment(R.layout.fragment_main_company) {
+class CompanyMainFragment : Fragment(R.layout.fragment_main_company), CompanyMainAdapter.Listener {
 
     private var _binding: FragmentMainCompanyBinding? = null
     private val binding get() = _binding!!
 
     @Inject
+    lateinit var navigator: CompanyMainNavigator
+
+    @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by activityViewModels<CompanyMainFragmentViewModel> { viewModelFactory }
+    private val detailViewModel by activityViewModels<DetailFragmentViewModel> { viewModelFactory }
 
     private lateinit var adapter: CompanyMainAdapter
 
@@ -49,6 +56,7 @@ class CompanyMainFragment : Fragment(R.layout.fragment_main_company) {
 
         setupRecyclerView()
 
+        viewModel.getInfoCompany()
         viewModel.getMainInfo.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is Resource.Loading -> {
@@ -73,7 +81,7 @@ class CompanyMainFragment : Fragment(R.layout.fragment_main_company) {
     }
 
     private fun setupRecyclerView() {
-        adapter = CompanyMainAdapter()
+        adapter = CompanyMainAdapter(this)
         binding.recycler.apply {
             this.adapter = this@CompanyMainFragment.adapter
             layoutManager = LinearLayoutManager(activity)
@@ -86,6 +94,12 @@ class CompanyMainFragment : Fragment(R.layout.fragment_main_company) {
 
     private fun hideProgressBar() {
         binding.progress.visibility = View.INVISIBLE
+    }
+
+    override fun onDetailInfoCompany(id: Long) {
+        val nav = findNavController()
+        detailViewModel.getDetailInfoCompany(id)
+        navigator.navigateToDetail(nav)
     }
 
 

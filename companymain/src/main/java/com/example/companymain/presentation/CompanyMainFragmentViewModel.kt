@@ -6,13 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.companymain.data.CompanyMainRepository
 import com.example.core.utils.Resource
+import com.example.core_api.dto.CompanyDetailDTO
 import com.example.core_api.dto.CompanyDtoList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 import java.net.UnknownHostException
 import javax.inject.Inject
+import kotlin.Exception
 
 class CompanyMainFragmentViewModel @Inject constructor(
     private val repository: CompanyMainRepository
@@ -22,9 +23,7 @@ class CompanyMainFragmentViewModel @Inject constructor(
 
     val getMainInfo: LiveData<Resource<CompanyDtoList>> = _getMainInfo
 
-    init {
-        getInfoCompany()
-    }
+
 
 
     fun getInfoCompany() {
@@ -49,4 +48,6 @@ class CompanyMainFragmentViewModel @Inject constructor(
         }
 
     }
+
+
 }

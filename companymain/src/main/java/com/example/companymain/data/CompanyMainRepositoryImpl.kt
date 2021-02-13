@@ -1,6 +1,7 @@
 package com.example.companymain.data
 
 import com.example.core.network.service.CompanyService
+import com.example.core_api.dto.CompanyDetailDTO
 import com.example.core_api.dto.CompanyDtoList
 import retrofit2.Response
 import javax.inject.Inject
@@ -11,5 +12,6 @@ class CompanyMainRepositoryImpl @Inject constructor(
 
     override suspend fun getCompanyInfo(): Response<CompanyDtoList> =
         service.getMainInfoCompany()
+
 
 }

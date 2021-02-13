@@ -13,7 +13,8 @@ import com.example.core_api.dto.CompanyDTO
 
 const val BASE_IMAGE_VIEW = "https://lifehack.studio/test_task/"
 
-class CompanyMainAdapter: ListAdapter<CompanyDTO,CompanyMainAdapter.CompanyViewHolder>(companyMainInfoDiffUtil)  {
+class CompanyMainAdapter(private val listener: Listener) :
+    ListAdapter<CompanyDTO, CompanyMainAdapter.CompanyViewHolder>(companyMainInfoDiffUtil) {
 
     companion object {
         val companyMainInfoDiffUtil = object : DiffUtil.ItemCallback<CompanyDTO>() {
@@ -30,24 +31,31 @@ class CompanyMainAdapter: ListAdapter<CompanyDTO,CompanyMainAdapter.CompanyViewH
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CompanyViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.cell_company_main_info, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.cell_company_main_info, parent, false)
         return CompanyViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: CompanyViewHolder, position: Int) {
-        getItem(position)?.let {
-            holder.bind(it)
+        getItem(position)?.let { holder.bind(it) }
+
+        holder.itemView.setOnClickListener {
+            getItem(position)?.let {
+                listener.onDetailInfoCompany(it.id.toLong())
+            }
         }
     }
 
-    class CompanyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    class CompanyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val binding = CellCompanyMainInfoBinding.bind(itemView)
 
-        fun bind(companyDTO: CompanyDTO){
+        fun bind(companyDTO: CompanyDTO) {
             binding.nameCompany.text = companyDTO.name
-            Glide.with(itemView.context).load(BASE_IMAGE_VIEW + companyDTO.img).into(binding.imageCompany)
+            Glide.with(itemView.context).load(BASE_IMAGE_VIEW + companyDTO.img)
+                .into(binding.imageCompany)
         }
+
         companion object {
             fun create(parent: ViewGroup): CompanyViewHolder {
                 val view = LayoutInflater.from(parent.context)
@@ -55,9 +63,10 @@ class CompanyMainAdapter: ListAdapter<CompanyDTO,CompanyMainAdapter.CompanyViewH
                 return CompanyViewHolder(view)
             }
         }
+    }
 
 
-
-
+    interface Listener {
+        fun onDetailInfoCompany(id: Long)
     }
 }
